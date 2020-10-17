@@ -55,6 +55,7 @@ const AuthApi = (app) => {
 
       if (!user) return next(boom.badRequest('Wrong email or password.'));
 
+      // Validation password bcrypt
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (!isValidPassword) return next(boom.badRequest('Wrong email or password.'));
 

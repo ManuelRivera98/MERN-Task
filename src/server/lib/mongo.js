@@ -25,11 +25,22 @@ class MongoLib {
     return MongoLib.connection;
   }
 
-  async create(collection, schema, data) {
+  async create(collection, schema, data, populate = []) {
     const Model = this.client.model(collection, schema);
 
     await this.connect();
-    const doc = await Model.create(data);
+    let doc = await Model.create(data);
+
+    if (populate.length > 0) {
+      let Model2;
+      const promises = populate.map(async (value) => {
+        Model2 = this.client.model(value.collection, value.schema);
+        doc = await Model2.populate(doc, { path: value.path });
+      });
+
+      await Promise.all(promises);
+    }
+
     return doc;
   }
 
@@ -45,10 +56,13 @@ class MongoLib {
 
     if (populate.length > 0) {
       let Model2;
-      populate.forEach(async (data) => {
+      const promises = populate.map(async (data) => {
         Model2 = this.client.model(data.collection, data.schema);
         docs = await Model2.populate(docs, { path: data.path });
+        return docs;
       });
+
+      await Promise.all(promises);
     }
 
     const res = {
@@ -57,6 +71,89 @@ class MongoLib {
     };
 
     return res;
+  }
+
+  async get(collection, schema, id, conditions, query, populate = []) {
+    const Model = this.client.model(collection, schema);
+
+    const { returnValues = '' } = conditions;
+
+    const isValid = this.client.Types.ObjectId.isValid(id);
+
+    if (!isValid) return { id: config.invalidIdMessage };
+
+    await this.connect();
+    let doc = await Model.findById(id, returnValues).where(query);
+
+    if (populate.length > 0) {
+      let Model2;
+      const promises = populate.map(async (data) => {
+        Model2 = this.client.model(data.collection, data.schema);
+        doc = await Model2.populate(doc, { path: data.path });
+      });
+
+      await Promise.all(promises);
+    }
+
+    return doc;
+  }
+
+  async update(
+    collection, schema, id, data, query, populate = [],
+  ) {
+    const Model = this.client.model(collection, schema);
+
+    const isValid = this.client.Types.ObjectId.isValid(id);
+
+    if (!isValid) return { id: config.invalidIdMessage };
+
+    await this.connect();
+    // Return new doc and run validations schema
+    let doc = await Model.findByIdAndUpdate(id, data, { new: true, runValidators: true })
+      .where(query);
+
+    if (populate.length > 0) {
+      let Model2;
+      const promises = populate.map(async (value) => {
+        Model2 = this.client.model(value.collection, value.schema);
+        doc = await Model2.populate(doc, { path: value.path });
+      });
+
+      await Promise.all(promises);
+    }
+
+    return doc;
+  }
+
+  async delete(collection, schema, id) {
+    const Model = this.client.model(collection, schema);
+
+    const isValid = this.client.Types.ObjectId.isValid(id);
+
+    if (!isValid) return { id: config.invalidIdMessage };
+
+    await this.connect();
+    const doc = await Model.findById(id).where({ status: true });
+
+    if (!doc) return undefined;
+
+    doc.status = false;
+    const docUpdated = await doc.save();
+
+    return docUpdated;
+  }
+
+  async removeDB(collection, schema, id) {
+    const Model = this.client.model(collection, schema);
+
+    const isValid = this.client.Types.ObjectId.isValid(id);
+
+    if (!isValid) return { id: config.invalidIdMessage };
+
+    await this.connect();
+    const doc = await Model.findByIdAndDelete(id);
+
+    return doc;
   }
 }
 

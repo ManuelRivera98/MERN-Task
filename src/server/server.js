@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 
 // Controllers
 import authApi from './routes/auth';
+import projectsApi from './routes/projects';
 
 // Conf
 import config from './config';
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 
 // Routes
 authApi(app);
+projectsApi(app);
 
 // Catch not found 404
 app.use(notFoundHandler);
