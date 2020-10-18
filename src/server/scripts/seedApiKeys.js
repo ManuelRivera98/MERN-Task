@@ -67,11 +67,3 @@ async function seedApiKey() {
 }
 
 seedApiKey();
-
-
-const example = [1, 2, 3, 4]
-const result = example.forEach((number) => {
-  return number
-});
-
-console.log(result);

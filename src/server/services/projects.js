@@ -40,6 +40,39 @@ class ProjectsService {
     );
     return projects;
   }
+
+  async getProject(schemas, id) {
+    const conditions = {
+      returnValues: 'name user_id, created',
+    };
+
+    const { userSchema, projectSchema } = schemas;
+
+    const populate = [
+      { collection: 'user', schema: userSchema, path: 'user_id' },
+    ];
+
+    const project = await this.mongoDB.get(
+      this.collection, projectSchema, id, conditions, {}, populate,
+    );
+
+    return project || {};
+  }
+
+  async updateProject(schemas, id, data) {
+    const { userSchema, projectSchema } = schemas;
+
+    const populate = [
+      { collection: 'user', schemas: userSchema, path: 'user_id' },
+    ];
+    const project = this.mongoDB.update(this.collection, projectSchema, id, data, {}, populate);
+    return project || {};
+  }
+
+  async deleteProject(schema, id) {
+    const project = this.mongoDB.removeDB(this.collection, schema, id);
+    return project || {};
+  }
 }
 
 export default ProjectsService;
