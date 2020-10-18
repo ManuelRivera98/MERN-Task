@@ -2,11 +2,14 @@ import boom from '@hapi/boom';
 // Lib
 import MongoLib from '../../lib/mongo';
 
-const isOwner = (collection, schema, search, path) => async (req, res, next) => {
+const isOwner = (collection, schema, search, path, where = 'params') => async (req, res, next) => {
   // Instance
   const mongoDB = new MongoLib();
 
-  const value = req.params[search];
+  const value = req[where][search];
+
+  if (!value) next(boom.badRequest(`${search} is require.`));
+
   const query = {
     [search]: value,
   };

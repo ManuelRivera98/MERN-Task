@@ -43,7 +43,7 @@ class ProjectsService {
 
   async getProject(schemas, id) {
     const conditions = {
-      returnValues: 'name user_id, created',
+      returnValues: 'name user_id user_id created',
     };
 
     const { userSchema, projectSchema } = schemas;
