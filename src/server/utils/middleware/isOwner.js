@@ -26,6 +26,10 @@ const isOwner = (collection, schema, search, path, where = 'params') => async (r
 
     if (userRequest !== pathDB.toString()) return next(boom.unauthorized('You do not have permission.'));
 
+    // Delete _id body request
+    if (where === 'body') {
+      delete req.body[search];
+    }
     // is owner
     next();
   } catch (error) {

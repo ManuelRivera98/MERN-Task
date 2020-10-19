@@ -1,27 +1,26 @@
 import React, { useReducer } from 'react';
-import { v4 as uuidV4 } from 'uuid';
 // PropTypes
 import PropTypes from 'prop-types';
 // Context
 import projectContext from './context';
 // Reducer
 import projectReducer from './reducer';
+// Client axios
+import clientAxios from '../../config/axios';
 // Types
 import {
-  SHOW_FORM_PROJECT, ADD_PROJECT, ERROR_FORM, SELECTED_PROJECT, DELETE_PROJECT,
+  SHOW_FORM_PROJECT, ADD_PROJECT, ERROR_FORM, SELECTED_PROJECT,
+  DELETE_PROJECT, GET_PROJECTS, ERROR_PROJECTS,
 } from '../../types';
+import axiosClient from '../../config/axios';
 
 const ProjectState = ({ children }) => {
   const initialState = {
-    projects: [
-      { name: 'Tienda virtual', id: 1 },
-      { name: 'Stack MERN', id: 2 },
-      { name: 'Stack with LARAVEL', id: 3 },
-      { name: 'Stack with NODE JS', id: 4 },
-    ],
+    projects: [],
     showForm: false,
-    error: false,
     selectedProject: {},
+    message: null,
+    error: false,
   };
 
   // Dispatch
@@ -35,12 +34,31 @@ const ProjectState = ({ children }) => {
     });
   };
 
-  const addProjectFn = (project) => {
-    const addIdProject = { ...project, id: uuidV4() };
-    dispatch({
-      type: ADD_PROJECT,
-      payload: addIdProject,
-    });
+  const getProjectsFn = async () => {
+    try {
+      const response = await clientAxios.get('/api/projects');
+      const { data } = response.data;
+
+      dispatch({
+        type: GET_PROJECTS,
+        payload: data.values,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addProjectFn = async (project) => {
+    try {
+      const response = await clientAxios.post('/api/projects', project);
+      const { data } = response.data;
+      dispatch({
+        type: ADD_PROJECT,
+        payload: data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const showErrorFn = (bool) => {
@@ -57,11 +75,27 @@ const ProjectState = ({ children }) => {
     });
   };
 
-  const deleteProjectFn = (projectId) => {
-    dispatch({
-      type: DELETE_PROJECT,
-      payload: projectId,
-    });
+  const deleteProjectFn = async (projectId) => {
+    try {
+      await axiosClient.delete(`/api/projects/${projectId}`);
+
+      dispatch({
+        type: DELETE_PROJECT,
+        payload: projectId,
+      });
+    } catch (error) {
+      const { message } = error.response.data;
+
+      const alert = {
+        msg: message,
+        category: 'alert-error',
+      };
+
+      dispatch({
+        type: ERROR_PROJECTS,
+        payload: alert,
+      });
+    }
   };
 
   return (
@@ -72,6 +106,7 @@ const ProjectState = ({ children }) => {
       showErrorFn,
       selectedProjectFn,
       deleteProjectFn,
+      getProjectsFn,
     }}
     >
       {children}

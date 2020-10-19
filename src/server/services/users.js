@@ -34,6 +34,11 @@ class UsersService {
     const users = await this.mongoDB.getAll(this.collection, schema, query, addConditions);
     return users;
   }
+
+  async getUser(schema, id) {
+    const user = await this.mongoDB.get(this.collection, schema, id, {}, { status: true });
+    return user || {};
+  }
 }
 
 export default UsersService;

@@ -9,7 +9,7 @@ const Task = ({ task }) => {
   // Consume task context
   const taskState = useContext(taskContext);
   const {
-    deleteTaskFn, getTasksProjectFn, changeStatusTaskFn, selectedTaskFn,
+    deleteTaskFn, getTasksProjectFn, updateTaskFn, selectedTaskFn,
   } = taskState;
   // Consume project context
   const projectState = useContext(projectContext);
@@ -22,21 +22,21 @@ const Task = ({ task }) => {
       case 'changeStateTask': {
         const changedStatusTask = {
           ...task,
-          state: !task.state,
+          status: !task.status,
         };
 
-        changeStatusTaskFn(changedStatusTask);
+        updateTaskFn(changedStatusTask);
         // Update tasks
-        getTasksProjectFn(project.id);
+        getTasksProjectFn(project._id);
         break;
       }
       case 'editTask':
         selectedTaskFn(task);
         break;
       case 'deleteTask':
-        deleteTaskFn(task.id);
+        deleteTaskFn(task._id, project._id);
         // update tasks
-        getTasksProjectFn(project.id);
+        getTasksProjectFn(project._id);
         break;
       default:
         break;
@@ -47,7 +47,7 @@ const Task = ({ task }) => {
     <li className="task shadow">
       <p>{task.name}</p>
       <div className="state">
-        {task.state
+        {task.status
           ? <button type="button" className="complete" onClick={() => handleClick('changeStateTask')}>Complete</button>
           : <button type="button" className="incomplete" onClick={() => handleClick('changeStateTask')}>Incomplete</button>}
       </div>

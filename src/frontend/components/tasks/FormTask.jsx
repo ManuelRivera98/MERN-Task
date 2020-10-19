@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { v4 as uuidV4 } from 'uuid';
 
 // Context
 import projectContext from '../../context/projects/context';
@@ -46,16 +45,15 @@ const FormTask = () => {
     } else {
       const addTask = {
         ...task,
-        id: uuidV4(),
-        projectId: project.id,
-        state: false,
+        project_id: project._id,
+        _id: project._id,
       };
       addTaskFn(addTask);
     }
 
     showErrorFn(false);
     // Update tasks
-    getTasksProjectFn(project.id);
+    getTasksProjectFn(project._id);
 
     // Reset inputs
     return setTask({

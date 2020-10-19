@@ -1,8 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 // Controllers
 import authApi from './routes/auth';
+import usersApi from './routes/users';
 import projectsApi from './routes/projects';
 import tasksApi from './routes/tasks';
 
@@ -21,10 +23,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
+// Cors available
+app.use(cors());
+
 // Routes
 authApi(app);
 projectsApi(app);
 tasksApi(app);
+usersApi(app);
 
 // Catch not found 404
 app.use(notFoundHandler);

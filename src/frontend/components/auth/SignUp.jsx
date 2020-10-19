@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+// Context
+import alertContext from '../../context/alerts/context';
+import authContext from '../../context/auth/context';
 
 const SignUp = () => {
   const [user, setUser] = useState({
@@ -12,9 +15,39 @@ const SignUp = () => {
     name, email, password, passwordConfirmation,
   } = user;
 
+  // history
+  const history = useHistory();
+
+  // Consume context's alert
+  const alertState = useContext(alertContext);
+  const { alert, showAlertFn } = alertState;
+  // Consume context's auth
+  const authState = useContext(authContext);
+  const { message, user: userContext, registerUserFn } = authState;
+
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // Validations fields
+    if (name.trim() === '' || email.trim() === '' || password.trim() === '' || passwordConfirmation.trim() === '') {
+      return showAlertFn('All fields are required.', 'alert-error');
+    }
+
+    // Password
+    if (password.length < 6 || passwordConfirmation.length < 6) return showAlertFn('The password must be at least 6 characters long', 'alert-error');
+
+    // Password match
+    if (password !== passwordConfirmation) return showAlertFn('Password does not match', 'alert-error');
+
+    registerUserFn({ name, email, password });
   };
+
+  // Observe user actions
+  useEffect(() => {
+    if (message) return showAlertFn(message.msg, message.category);
+
+    if (Object.keys(userContext).length > 0) return history.push('/projects');
+  }, [message, userContext, history]);
 
   const handleChange = (event) => {
     setUser({
@@ -25,12 +58,17 @@ const SignUp = () => {
 
   return (
     <div className="form-user">
+      { alert && (
+        <div className={`alert ${alert.category}`}>
+          {alert.msg}
+        </div>
+      )}
       <div className="content-form shadow-dark">
         <h1>Sign Up</h1>
 
         <form onSubmit={handleSubmit}>
           <div className="field-form">
-            <p>Email</p>
+            <p>Name</p>
             <label htmlFor="name">
               <input
                 id="name"

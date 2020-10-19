@@ -49,12 +49,12 @@ const tasksApi = (app) => {
 
   router.get('/',
     jwtAuthentication,
-    isOwnerMiddleware('project', projectSchema, '_id', 'user_id', 'body'),
+    isOwnerMiddleware('project', projectSchema, '_id', 'user_id', 'query'),
     async (req, res, next) => {
       const { query } = req;
-      const { _id } = req.body;
+      const { _id } = req.query;
 
-      if (!_id) return next(boom.badRequest('Project id: (_id) is require.'));
+      if (!_id) return next(boom.badRequest('Project id is require.'));
       // Validation id mongo
       if (!mongoose.Types.ObjectId.isValid(_id)) return next(boom.badData('Invalid id.'));
 
@@ -76,7 +76,7 @@ const tasksApi = (app) => {
 
   router.put('/:_id',
     jwtAuthentication,
-    isOwnerMiddleware('project', projectSchema, '_id', 'user_id', 'body'),
+    isOwnerMiddleware('project', projectSchema, '_id', 'user_id', 'query'),
     async (req, res, next) => {
       const { body } = req;
       const { _id } = req.params;
@@ -138,7 +138,7 @@ const tasksApi = (app) => {
 
   router.delete('/:_id',
     jwtAuthentication,
-    isOwnerMiddleware('project', projectSchema, '_id', 'user_id', 'body'),
+    isOwnerMiddleware('project', projectSchema, '_id', 'user_id', 'query'),
     async (req, res, next) => {
       const { _id } = req.params;
 

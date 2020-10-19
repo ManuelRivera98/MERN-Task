@@ -4,51 +4,16 @@ import PropTypes from 'prop-types';
 // Context
 import taskContext from './context';
 import taskReducer from './reducer';
+// Client axios
+import clientAxios from '../../config/axios';
 // Types
 import {
-  GET_PROJECT_TASKS, ADD_TASK, ERROR_TASK, DELETE_TASK, CHANGE_STATUS_TASK,
+  GET_PROJECT_TASKS, ADD_TASK, ERROR_TASK, DELETE_TASK,
   SELECTED_TASK, UPDATE_TASK, CHANGE_SELECTED_TASK_VALUE,
 } from '../../types';
 
 const TaskState = ({ children }) => {
   const initialState = {
-    tasks: [
-      {
-        id: 1, name: 'Elegir plataforma', state: true, projectId: 1,
-      },
-      {
-        id: 2, name: 'Elegir colores', state: false, projectId: 3,
-      },
-      {
-        id: 3, name: 'Elegir metodos', state: true, projectId: 4,
-      },
-      {
-        id: 4, name: 'Elegir hosting', state: false, projectId: 2,
-      },
-      {
-        id: 5, name: 'Selecionar sistema', state: true, projectId: 1,
-      },
-      {
-        id: 6, name: 'Compartir colores', state: false, projectId: 3,
-      },
-      {
-        id: 7, name: 'Transformar metodos', state: true, projectId: 4,
-      },
-      {
-        id: 8, name: 'Elegir backend', state: false, projectId: 2,
-      }, {
-        id: 9, name: 'Sacar plataforma', state: true, projectId: 1,
-      },
-      {
-        id: 10, name: 'Elegir produccion', state: false, projectId: 3,
-      },
-      {
-        id: 11, name: 'Elegir solucion', state: true, projectId: 4,
-      },
-      {
-        id: 12, name: 'Elegir salvar desarrollo', state: false, projectId: 2,
-      },
-    ],
     tasksProject: [],
     error: false,
     selectedTask: {},
@@ -58,18 +23,30 @@ const TaskState = ({ children }) => {
   const [state, dispatch] = useReducer(taskReducer, initialState);
 
   // Fns CRUD
-  const getTasksProjectFn = (projectId) => {
-    dispatch({
-      type: GET_PROJECT_TASKS,
-      payload: projectId,
-    });
+  const getTasksProjectFn = async (projectId) => {
+    try {
+      const response = await clientAxios.get(`/api/tasks?_id=${projectId}`);
+      const { data } = response.data;
+      dispatch({
+        type: GET_PROJECT_TASKS,
+        payload: data.values,
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
-  const addTaskFn = (task) => {
-    dispatch({
-      type: ADD_TASK,
-      payload: task,
-    });
+  const addTaskFn = async (task) => {
+    try {
+      const response = await clientAxios.post('/api/tasks', task);
+      const { data } = response.data;
+      dispatch({
+        type: ADD_TASK,
+        payload: data,
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   const showErrorFn = (bool) => {
@@ -79,18 +56,17 @@ const TaskState = ({ children }) => {
     });
   };
 
-  const deleteTaskFn = (taskId) => {
-    dispatch({
-      type: DELETE_TASK,
-      payload: taskId,
-    });
-  };
+  const deleteTaskFn = async (taskId, projectId) => {
+    try {
+      await clientAxios.delete(`/api/tasks/${taskId}?_id=${projectId}`);
 
-  const changeStatusTaskFn = (task) => {
-    dispatch({
-      type: CHANGE_STATUS_TASK,
-      payload: task,
-    });
+      dispatch({
+        type: DELETE_TASK,
+        payload: taskId,
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   const selectedTaskFn = (task) => {
@@ -100,11 +76,18 @@ const TaskState = ({ children }) => {
     });
   };
 
-  const updateTaskFn = (task) => {
-    dispatch({
-      type: UPDATE_TASK,
-      payload: task,
-    });
+  const updateTaskFn = async (task) => {
+    try {
+      const response = await clientAxios.put(`/api/tasks/${task._id}?_id=${task.project_id._id}`, task);
+      const { data } = response.data;
+
+      dispatch({
+        type: UPDATE_TASK,
+        payload: data,
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   const changeSelectedTaskValueFn = (value) => {
@@ -121,7 +104,6 @@ const TaskState = ({ children }) => {
       addTaskFn,
       showErrorFn,
       deleteTaskFn,
-      changeStatusTaskFn,
       selectedTaskFn,
       updateTaskFn,
       changeSelectedTaskValueFn,
