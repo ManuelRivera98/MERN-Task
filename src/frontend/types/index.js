@@ -14,6 +14,7 @@ export const DELETE_TASK = 'deleteTask';
 export const SELECTED_TASK = 'selectedTask';
 export const UPDATE_TASK = 'updateTask';
 export const CHANGE_SELECTED_TASK_VALUE = 'changeSelectedTaskValue';
+export const ERROR_TASK_MESSAGE = 'errorTaskMessage';
 
 // Alerts
 export const SHOW_ALERT = 'showAlert';

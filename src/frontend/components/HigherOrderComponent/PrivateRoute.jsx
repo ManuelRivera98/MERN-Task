@@ -1,4 +1,7 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext, useEffect } from 'react';
+// PropTypes
+import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 import authContext from '../../context/auth/context';
 
@@ -8,6 +11,7 @@ const PrivateRoute = ({ component: Component, ...props }) => {
 
   useEffect(() => {
     userAuthorizationFn();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -18,6 +22,10 @@ const PrivateRoute = ({ component: Component, ...props }) => {
     </Route>
 
   );
+};
+
+PrivateRoute.propTypes = {
+  component: PropTypes.element.isRequired,
 };
 
 export default PrivateRoute;

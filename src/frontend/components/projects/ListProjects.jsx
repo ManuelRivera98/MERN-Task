@@ -18,6 +18,7 @@ const ListProjects = () => {
     if (message) return showAlertFn(message.msg, message.category);
 
     getProjectsFn();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [message]);
 
   if (projects.length === 0) return <p>No projects yet.</p>;

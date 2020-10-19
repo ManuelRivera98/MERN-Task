@@ -41,8 +41,6 @@ const AuthContext = ({ children }) => {
         payload: user,
       });
     } catch (error) {
-      console.log(error.response.data);
-
       const { email } = error.response.data;
 
       const alert = {
@@ -71,7 +69,6 @@ const AuthContext = ({ children }) => {
         payload: response.data,
       });
     } catch (error) {
-      console.log(error.response);
       const { message } = error.response.data;
 
       const alert = {

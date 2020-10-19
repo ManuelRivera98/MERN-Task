@@ -35,6 +35,7 @@ const Login = () => {
   useEffect(() => {
     if (message) return showAlertFn(message.msg, message.category);
     if (authenticated) return history.push('/projects');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [message, authenticated, history]);
 
   const handleChange = (event) => {

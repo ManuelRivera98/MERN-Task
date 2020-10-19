@@ -47,6 +47,7 @@ const SignUp = () => {
     if (message) return showAlertFn(message.msg, message.category);
 
     if (Object.keys(userContext).length > 0) return history.push('/projects');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [message, userContext, history]);
 
   const handleChange = (event) => {

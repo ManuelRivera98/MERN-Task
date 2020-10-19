@@ -9,7 +9,7 @@ import clientAxios from '../../config/axios';
 // Types
 import {
   GET_PROJECT_TASKS, ADD_TASK, ERROR_TASK, DELETE_TASK,
-  SELECTED_TASK, UPDATE_TASK, CHANGE_SELECTED_TASK_VALUE,
+  SELECTED_TASK, UPDATE_TASK, CHANGE_SELECTED_TASK_VALUE, ERROR_TASK_MESSAGE,
 } from '../../types';
 
 const TaskState = ({ children }) => {
@@ -17,6 +17,7 @@ const TaskState = ({ children }) => {
     tasksProject: [],
     error: false,
     selectedTask: {},
+    message: null,
   };
 
   // Dispatch
@@ -32,7 +33,17 @@ const TaskState = ({ children }) => {
         payload: data.values,
       });
     } catch (error) {
-      console.log(error.response);
+      const { message } = error.response.data;
+
+      const alert = {
+        msg: message,
+        category: 'alert-error',
+      };
+
+      dispatch({
+        type: ERROR_TASK_MESSAGE,
+        payload: alert,
+      });
     }
   };
 
@@ -45,7 +56,17 @@ const TaskState = ({ children }) => {
         payload: data,
       });
     } catch (error) {
-      console.log(error.response);
+      const { message } = error.response.data;
+
+      const alert = {
+        msg: message,
+        category: 'alert-error',
+      };
+
+      dispatch({
+        type: ERROR_TASK_MESSAGE,
+        payload: alert,
+      });
     }
   };
 
@@ -65,7 +86,17 @@ const TaskState = ({ children }) => {
         payload: taskId,
       });
     } catch (error) {
-      console.log(error.response);
+      const { message } = error.response.data;
+
+      const alert = {
+        msg: message,
+        category: 'alert-error',
+      };
+
+      dispatch({
+        type: ERROR_TASK_MESSAGE,
+        payload: alert,
+      });
     }
   };
 
@@ -86,7 +117,17 @@ const TaskState = ({ children }) => {
         payload: data,
       });
     } catch (error) {
-      console.log(error.response);
+      const { message } = error.response.data;
+
+      const alert = {
+        msg: message,
+        category: 'alert-error',
+      };
+
+      dispatch({
+        type: ERROR_TASK_MESSAGE,
+        payload: alert,
+      });
     }
   };
 

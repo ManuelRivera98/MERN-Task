@@ -20,6 +20,7 @@ const Project = ({ project }) => {
   // Observer actions user
   useEffect(() => {
     userAuthorizationFn();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleClick = () => {

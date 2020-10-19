@@ -12,7 +12,6 @@ import {
   SHOW_FORM_PROJECT, ADD_PROJECT, ERROR_FORM, SELECTED_PROJECT,
   DELETE_PROJECT, GET_PROJECTS, ERROR_PROJECTS,
 } from '../../types';
-import axiosClient from '../../config/axios';
 
 const ProjectState = ({ children }) => {
   const initialState = {
@@ -44,7 +43,17 @@ const ProjectState = ({ children }) => {
         payload: data.values,
       });
     } catch (error) {
-      console.log(error);
+      const { message } = error.response.data;
+
+      const alert = {
+        msg: message,
+        category: 'alert-error',
+      };
+
+      dispatch({
+        type: ERROR_PROJECTS,
+        payload: alert,
+      });
     }
   };
 
@@ -57,7 +66,17 @@ const ProjectState = ({ children }) => {
         payload: data,
       });
     } catch (error) {
-      console.log(error);
+      const { message } = error.response.data;
+
+      const alert = {
+        msg: message,
+        category: 'alert-error',
+      };
+
+      dispatch({
+        type: ERROR_PROJECTS,
+        payload: alert,
+      });
     }
   };
 
@@ -77,7 +96,7 @@ const ProjectState = ({ children }) => {
 
   const deleteProjectFn = async (projectId) => {
     try {
-      await axiosClient.delete(`/api/projects/${projectId}`);
+      await clientAxios.delete(`/api/projects/${projectId}`);
 
       dispatch({
         type: DELETE_PROJECT,
