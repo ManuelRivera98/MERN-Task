@@ -1,14 +1,16 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const webpack = require('webpack');
 // const EslintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src/frontend/index.jsx'),
+  entry: [path.resolve(__dirname, 'src/frontend/index.jsx'), 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=2000&reload=true'],
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'bundle.js',
+    filename: 'assets/app.js',
   },
+  mode: 'development',
   resolve: {
     extensions: ['.js', '.jsx', 'json'],
   },
@@ -31,10 +33,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'public/index.html'),
-      filename: 'index.html',
-    }),
+    new webpack.HotModuleReplacementPlugin(),
     new MiniCssExtractPlugin({
       filename: 'assets/app.css',
     }),

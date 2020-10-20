@@ -15,7 +15,7 @@ const ListProjects = () => {
   const { alert, showAlertFn } = alertState;
 
   useEffect(() => {
-    if (message) return showAlertFn(message.msg, message.category);
+    if (message) showAlertFn(message.msg, message.category);
 
     getProjectsFn();
     // eslint-disable-next-line react-hooks/exhaustive-deps

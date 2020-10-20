@@ -30,6 +30,7 @@ export default (state, action) => {
       return {
         ...state,
         error: action.payload,
+        message: null,
       };
     case SELECTED_PROJECT:
       return {
