@@ -58,7 +58,7 @@ const AuthContext = ({ children }) => {
   const loginFn = async (data) => {
     const addApiKeyToken = {
       ...data,
-      apiKeyToken: config.apiKeyTokenPublic,
+      apiKeyToken: config.apiKeyTokenAdmin,
     };
 
     try {

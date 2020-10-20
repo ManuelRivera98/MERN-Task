@@ -21,9 +21,15 @@ import serverRoutes from '../../frontend/serverRoutes';
 // Conf
 import config from '../config';
 
+// Middleware
+import getManifest from '../utils/middleware/getManifest';
+
 // SSR
 
-const setResponse = (html) => (`
+const setResponse = (html, manifest) => {
+  const mainBuild = manifest ? manifest['main.js'] : 'assets/app.js';
+  const vendorBuild = manifest ? manifest['vendors.js'] : 'assets/vendor.js';
+  return (`
   <!DOCTYPE html>
   <html lang="en">
 
@@ -44,17 +50,20 @@ const setResponse = (html) => (`
     <div id="root">
       ${html}
     </div>
-    <script>
+    <script type="text/javascript" >
     if (typeof localStorage === "undefined" || localStorage === null) {
       var LocalStorage = require('node-localstorage').LocalStorage;
       localStorage = new LocalStorage('./scratch');
     }
   </script>
-    <script src="assets/app.js" type="text/javascript" ></script>
+    <script src="${mainBuild}" type="text/javascript" ></script>
+    <script src="${vendorBuild}" type="text/javascript" ></script>
+
   </body>
 
   </html>
   `);
+};
 
 const renderApp = (req, res) => {
   const html = renderToString(
@@ -71,7 +80,7 @@ const renderApp = (req, res) => {
     </ProjectState>,
   );
 
-  res.send(setResponse(html));
+  res.send(setResponse(html, req.hashManifest));
 };
 
 const mernApi = (app) => {
@@ -84,6 +93,12 @@ const mernApi = (app) => {
 
     app.use(webpackDevMiddleware(compiler, serverConfig));
     app.use(webpackHotMiddleware(compiler));
+  } else {
+    // Add manifest
+    app.use((req, res, next) => {
+      req.hashManifest = getManifest();
+      next();
+    });
   }
 
   const router = express.Router();

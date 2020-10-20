@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import helmet from 'helmet';
 import path from 'path';
 
 // Controllers
@@ -20,7 +21,12 @@ import { logErrors, wrapErrors, errorHandler } from './utils/middleware/errorsHa
 const app = express();
 
 // use statics
-app.use(express.static(path.resolve(__dirname, '../../public')));
+app.use(express.static(path.resolve(__dirname, 'public')));
+// Helmet
+app.use(helmet());
+app.use(helmet.permittedCrossDomainPolicies());
+// Disable x-powered-by
+app.disable('x-powered-by');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));

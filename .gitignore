@@ -126,4 +126,7 @@ psd
 thumb
 sketch
 
+# Public server
+src/server/public
+
 # End of https://www.toptal.com/developers/gitignore/api/node,react
