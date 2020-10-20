@@ -1,3 +1,5 @@
+// IGNORE STYLES FROM SERVER
+// require('ignore-styles')
 require('@babel/polyfill');
 
 require('@babel/register')({
@@ -6,5 +8,11 @@ require('@babel/register')({
     '@babel/preset-react',
   ],
 });
+
+// LOAD ASSETS FROM SERVER
+// require('asset-require-hook')({
+//   extensions: ['jpg'],
+//   name: '[hash].[ext]'
+// })
 
 require('./server');

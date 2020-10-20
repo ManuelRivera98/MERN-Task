@@ -6,8 +6,7 @@
   "author": "Manuel Rivera mr98.dev@gmail.com",
   "license": "MIT",
   "scripts": {
-    "devBackend": " DEBUG=app:* nodemon src/server/index.js",
-    "dev": "webpack-dev-server",
+    "dev": " DEBUG=app:* nodemon  -r node-localstorage/register src/server/index.js",
     "build": "webpack --mode production",
     "lint": "eslint src/frontend/ --ext .js --ext .jsx --fix",
     "lintDev": "eslint src/server/ --ext .js --fix"
@@ -29,12 +28,16 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.6.1",
+    "history": "^5.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.9",
     "mongoose-unique-validator": "^2.0.3",
+    "node-localstorage": "^2.1.6",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-router": "^5.2.0",
+    "react-router-config": "^5.1.1",
     "react-router-dom": "^5.2.0",
     "react-transition-group": "^4.4.1",
     "underscore": "^1.11.0",
@@ -57,7 +60,6 @@
     "react-hot-loader": "^4.13.0",
     "webpack-cli": "3.3.12",
     "webpack-dev-middleware": "^3.7.2",
-    "webpack-dev-server": "3.11.0",
     "webpack-hot-middleware": "^2.25.0"
   }
 }
