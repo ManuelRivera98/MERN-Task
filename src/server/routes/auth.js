@@ -45,6 +45,8 @@ const AuthApi = (app) => {
   router.post('/login', async (req, res, next) => {
     const { email, password, apiKeyToken } = req.body;
 
+    console.log(apiKeyToken, 'IM here');
+
     if (!apiKeyToken) return next(boom.unauthorized('apiKeyToken is require.'));
 
     if (!email || !password) return next(boom.badRequest('Email and password are require.'));

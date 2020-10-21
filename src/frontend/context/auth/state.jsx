@@ -61,6 +61,8 @@ const AuthContext = ({ children }) => {
       apiKeyToken: config.apiKeyTokenAdmin,
     };
 
+    console.log(addApiKeyToken);
+
     try {
       const response = await axiosClient.post('/api/auth/login', addApiKeyToken);
 
