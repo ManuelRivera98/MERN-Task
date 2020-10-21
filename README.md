@@ -1,6 +1,6 @@
 # MERNTasks
 
-![Captura de la App](./.readme-statci/screen.png)
+![Captura de la App](./.readme-static/screen.png)
 
 
 ## Sitio
